@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline - PIVIT Fishing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1F2937;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+    }
+
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #6B7280;
+      margin-bottom: 2rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #FF6B35;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .button:hover {
+      background: #E55A2A;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Some features may be limited.</p>
+    <p style="font-size: 0.875rem; color: #9CA3AF;">Your cart and previous orders are still available offline.</p>
+    <button class="button" onclick="location.reload()">Retry Connection</button>
+  </div>
+</body>
+</html>

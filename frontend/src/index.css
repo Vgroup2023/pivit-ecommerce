@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1F2937;
+  --secondary: #FF6B35;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --light: #F9FAFB;
+  --dark: #111827;
+}
+
+* {
+  @apply box-border;
+}
+
+body {
+  @apply bg-light text-dark font-sans;
+}
+
+a {
+  @apply text-secondary hover:underline;
+}
+
+button {
+  @apply transition-colors;
+}
+
+.btn {
+  @apply px-4 py-2 rounded font-medium transition-colors;
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:bg-dark;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white hover:bg-orange-600;
+}
+
+.btn-outline {
+  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow p-6;
+}
+
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary;
+}
