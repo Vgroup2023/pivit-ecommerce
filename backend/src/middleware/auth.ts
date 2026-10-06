@@ -1,18 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-declare global {
-  namespace Express {
-    interface Request {
-      session: {
-        userId?: string;
-        tenantId?: string;
-        role?: string;
-        email?: string;
-      };
-    }
-  }
-}
-
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.session.userId) {
     return res.status(401).json({ error: 'Unauthorized - Please log in' });
