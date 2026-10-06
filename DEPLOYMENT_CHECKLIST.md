@@ -66,16 +66,22 @@
    DATABASE_PASSWORD = AwsRDS2024!Fishing#Secure9
    JWT_SECRET = <generate: openssl rand -hex 32>
    SESSION_SECRET = <generate: openssl rand -hex 32>
-   STRIPE_SECRET_KEY = sk_test_...
-   STRIPE_PUBLISHABLE_KEY = pk_test_...
-   STRIPE_WEBHOOK_SECRET = whsec_...
+   STRIPE_SECRET_KEY = sk_live_... (from Stripe dashboard)
+   STRIPE_PUBLISHABLE_KEY = pk_live_... (from Stripe dashboard)
    FRONTEND_URL = https://your-vercel-deployment.vercel.app
    NODE_ENV = production
    PORT = 3001
-   REDIS_URL = <your-redis-url-if-configured>
    ```
 
-3. **DO NOT use DATABASE_URL with special characters in passwords** - use individual parameters instead
+3. **Critical Configuration:**
+   - `JWT_SECRET` & `SESSION_SECRET` must be 32+ random hex characters (generate with `openssl rand -hex 32`)
+   - `STRIPE_SECRET_KEY` starts with `sk_live_` or `sk_test_` (from https://dashboard.stripe.com/apikeys)
+   - `STRIPE_PUBLISHABLE_KEY` starts with `pk_live_` or `pk_test_` (from same Stripe page)
+   - `FRONTEND_URL` must match your Vercel deployment URL exactly (for CORS)
+   - **DO NOT use DATABASE_URL with special characters** - use individual parameters instead
+
+4. **After setting all variables, Save and wait for auto-redeploy (2-3 minutes)**
+   - Check logs for: ✅ "Environment configuration validated successfully"
 
 #### 1c. Deploy Backend
 ```bash
