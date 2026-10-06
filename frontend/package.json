@@ -26,6 +26,7 @@
     "workbox-cli": "^6.5.4"
   },
   "scripts": {
+    "prebuild": "npm install --include=dev",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
