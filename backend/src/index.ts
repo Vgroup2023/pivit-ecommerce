@@ -4,7 +4,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { initializeDatabase } from './config/database';
 import { initializeRedis } from './config/redis';
+import { environment } from './config/environment';
 import { errorHandler } from './middleware/errorHandler';
+import { securityHeaders } from './middleware/securityHeaders';
 
 // Import routes
 import healthRouter from './routes/health';
@@ -15,26 +17,28 @@ import ordersRouter from './routes/orders';
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middleware (in order of importance)
+app.use(securityHeaders); // Security headers (HSTS, X-Frame-Options, CSP, etc)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// CORS configuration
+// CORS configuration (uses validated environment)
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: environment.frontend.url,
   credentials: true,
+  optionsSuccessStatus: 200,
 }));
 
-// Session configuration
+// Session configuration (uses validated environment secrets)
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'dev-secret-change-in-production',
+  secret: environment.auth.sessionSecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: environment.server.nodeEnv === 'production',
     httpOnly: true,
+    sameSite: 'lax',
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   },
 }));
@@ -73,16 +77,23 @@ async function start() {
       throw new Error('Database initialization failed');
     }
 
-    // Initialize Redis
+    // Initialize Redis (optional - graceful degradation if not configured)
     const redisReady = await initializeRedis();
     if (!redisReady) {
-      console.warn('⚠️ Redis connection failed - some features may be limited');
+      console.warn('⚠️ Redis not configured - using in-memory sessions (not suitable for production scaling)');
     }
 
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`✓ API running on http://localhost:${PORT}`);
-      console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+    // Start server using validated environment configuration
+    app.listen(environment.server.port, () => {
+      console.log(`✓ API running on http://localhost:${environment.server.port}`);
+      console.log(`✓ Environment: ${environment.server.nodeEnv}`);
+      console.log(`✓ Frontend URL: ${environment.frontend.url}`);
+      if (environment.redis) {
+        console.log('✓ Redis: Connected');
+      }
+      if (environment.erp) {
+        console.log('✓ ERP Integration: Configured');
+      }
     });
   } catch (error) {
     console.error('✗ Failed to start server:', error);
@@ -93,6 +104,4 @@ async function start() {
 start();
 
 export default app;
-/* Force rebuild Mon Oct  5 19:42:02 EDT 2026 */
-// Build timestamp: 2026-10-06 00:28:49 UTC
 
