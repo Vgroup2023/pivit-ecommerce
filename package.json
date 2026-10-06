@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "PIVIT Fishing E-commerce Platform",
   "scripts": {
+    "prebuild": "cd frontend && npm install --include=dev && cd ..",
     "build": "cd frontend && npm run build && cd .. && cp -r frontend/dist ./dist",
     "dev": "cd frontend && npm run dev"
   },
