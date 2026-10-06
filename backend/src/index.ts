@@ -7,6 +7,8 @@ import { initializeRedis } from './config/redis';
 import { environment } from './config/environment';
 import { errorHandler } from './middleware/errorHandler';
 import { securityHeaders } from './middleware/securityHeaders';
+import { structuredLogger, errorLogger, logStartup, logShutdown } from './middleware/structuredLogger';
+import { validateRequestBody, preventSQLInjection, preventXSS } from './middleware/inputValidation';
 
 // Import routes
 import healthRouter from './routes/health';
@@ -18,10 +20,21 @@ dotenv.config();
 
 const app: Express = express();
 
-// Middleware (in order of importance)
-app.use(securityHeaders); // Security headers (HSTS, X-Frame-Options, CSP, etc)
+// Middleware (order matters - first in chain processes first)
+// 1. Security headers first (affects all responses)
+app.use(securityHeaders);
+
+// 2. Structured logging (logs all requests)
+app.use(structuredLogger);
+
+// 3. Parse request body
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// 4. Input validation and sanitization (before business logic)
+app.use(validateRequestBody);
+app.use(preventSQLInjection);
+app.use(preventXSS);
 
 // CORS configuration (uses validated environment)
 app.use(cors({
@@ -61,7 +74,10 @@ app.get('/', (req: Request, res: Response) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// 404 handler
+// Structured error logging (captures uncaught errors)
+app.use(errorLogger);
+
+// 404 handler (after all routes and error handlers)
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Route not found' });
 });
@@ -69,7 +85,7 @@ app.use((req: Request, res: Response) => {
 // Initialize and start server
 async function start() {
   try {
-    console.log('🚀 Starting PIVIT Fishing E-Commerce API...');
+    logStartup();
 
     // Initialize database
     const dbReady = await initializeDatabase();
@@ -84,7 +100,7 @@ async function start() {
     }
 
     // Start server using validated environment configuration
-    app.listen(environment.server.port, () => {
+    const server = app.listen(environment.server.port, () => {
       console.log(`✓ API running on http://localhost:${environment.server.port}`);
       console.log(`✓ Environment: ${environment.server.nodeEnv}`);
       console.log(`✓ Frontend URL: ${environment.frontend.url}`);
@@ -95,8 +111,24 @@ async function start() {
         console.log('✓ ERP Integration: Configured');
       }
     });
+
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+      logShutdown('SIGTERM signal received');
+      server.close(() => {
+        process.exit(0);
+      });
+    });
+
+    process.on('SIGINT', () => {
+      logShutdown('SIGINT signal received');
+      server.close(() => {
+        process.exit(0);
+      });
+    });
   } catch (error) {
     console.error('✗ Failed to start server:', error);
+    logShutdown(`Startup error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     process.exit(1);
   }
 }
