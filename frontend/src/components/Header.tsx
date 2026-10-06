@@ -7,11 +7,25 @@ export default function Header() {
   const cartCount = useCartStore((state) => state.getItemCount());
 
   return (
-    <header className="bg-primary text-white shadow-md">
-      <div className="max-w-6xl mx-auto px-4 py-4">
+    <header className="brand-header text-white">
+      <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold hover:text-secondary">
-            🎣 PIVIT Fishing
+          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition">
+            {/* Logo will be loaded from public/logo.svg */}
+            <img
+              src="/logo.svg"
+              alt="PIVIT Fishing"
+              className="brand-logo"
+              onError={(e) => {
+                // Fallback if logo not found
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+            <span className="text-xl font-bold hidden sm:inline">
+              <span className="text-white">PIVIT</span>
+              <span className="brand-accent-text"> Fishing</span>
+            </span>
+            <span className="sm:hidden text-lg font-bold">🎣 PIVIT</span>
           </Link>
 
           <nav className="hidden md:flex space-x-6">

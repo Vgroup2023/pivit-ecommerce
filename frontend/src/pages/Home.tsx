@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
+import PromotionalBanner from '../components/PromotionalBanner';
 
 export default function Home() {
   return (
     <div>
+      {/* Promotional Banner with Coming Soon Image */}
+      <section className="bg-primary py-2">
+        <PromotionalBanner />
+      </section>
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary to-dark text-white py-20">
         <div className="max-w-6xl mx-auto px-4 text-center">

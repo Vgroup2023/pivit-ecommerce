@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 export interface CartItem {
   productId: string;
@@ -19,9 +18,7 @@ interface CartStore {
   getItemCount: () => number;
 }
 
-const useCartStore = create<CartStore>(
-  persist(
-    (set, get) => ({
+const useCartStore = create<CartStore>((set, get) => ({
       items: [],
 
       addItem: (item: CartItem) => {
@@ -65,11 +62,6 @@ const useCartStore = create<CartStore>(
       getItemCount: () => {
         return get().items.reduce((count, item) => count + item.quantity, 0);
       },
-    }),
-    {
-      name: 'cart-storage',
-    }
-  )
-);
+    }));
 
 export default useCartStore;

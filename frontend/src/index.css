@@ -3,51 +3,196 @@
 @tailwind utilities;
 
 :root {
-  --primary: #1F2937;
-  --secondary: #FF6B35;
+  /* PIVIT Fishing Brand Colors */
+  --primary: #1a2332; /* Deep Navy */
+  --secondary: #d4a574; /* Metallic Gold */
+  --accent: #b8860b; /* Bronze Gold */
+  --light-gold: #f5e6d3; /* Light Gold */
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
-  --light: #F9FAFB;
-  --dark: #111827;
 }
 
 * {
-  @apply box-border;
+  box-sizing: border-box;
 }
 
 body {
-  @apply bg-light text-dark font-sans;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  @apply text-secondary hover:underline;
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 button {
-  @apply transition-colors;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
 
 .btn {
-  @apply px-4 py-2 rounded font-medium transition-colors;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .btn-primary {
-  @apply bg-primary text-white hover:bg-dark;
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #111827;
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  @apply bg-secondary text-white hover:bg-orange-600;
+  background-color: var(--secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #E55A24;
+  opacity: 0.9;
 }
 
 .btn-outline {
-  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background-color: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 .card {
-  @apply bg-white rounded-lg shadow p-6;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
 }
 
 .input {
-  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: var(--success);
+  color: white;
+}
+
+.badge-danger {
+  background-color: var(--danger);
+  color: white;
+}
+
+.badge-warning {
+  background-color: var(--warning);
+  color: white;
+}
+
+/* PIVIT Branding Styles */
+.brand-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #0f1318 100%);
+  border-bottom: 3px solid var(--secondary);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.brand-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-accent-text {
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--light-gold) 100%);
+  padding: 3rem 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hero-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.promotional-banner {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin: 2rem 0;
+  font-weight: 500;
+}
+
+.btn-gold {
+  background-color: var(--secondary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.btn-gold:hover {
+  background-color: var(--accent);
+  color: white;
+  opacity: 1;
+}
+
+.gold-accent-border {
+  border-left: 4px solid var(--secondary);
+  padding-left: 1rem;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .brand-logo {
+    height: 40px;
+  }
 }

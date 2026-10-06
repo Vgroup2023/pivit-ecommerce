@@ -61,14 +61,14 @@ export default function AdminDashboard() {
         <div className="card">
           <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
           <div className="space-y-2">
+            <Link to="/admin/products" className="block btn btn-outline text-left py-3 px-4">
+              🛍️ Manage Products
+            </Link>
             <Link to="/admin/orders" className="block btn btn-outline text-left py-3 px-4">
               📦 Manage Orders
             </Link>
             <Link to="#" className="block btn btn-outline text-left py-3 px-4">
               📊 View Reports
-            </Link>
-            <Link to="#" className="block btn btn-outline text-left py-3 px-4">
-              👥 Manage Users
             </Link>
             <Link to="#" className="block btn btn-outline text-left py-3 px-4">
               ⚙️ Settings

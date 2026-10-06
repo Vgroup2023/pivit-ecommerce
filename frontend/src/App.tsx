@@ -10,6 +10,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminOrders from './pages/Admin/Orders';
+import AdminOrderDetails from './pages/Admin/OrderDetails';
+import AdminProducts from './pages/Admin/Products';
+import CompliancePage from './pages/Compliance';
 
 function App() {
   return (
@@ -25,10 +28,13 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/compliance" element={<CompliancePage />} />
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="/admin/orders/:orderId" element={<AdminOrderDetails />} />
           </Routes>
         </main>
         <Footer />

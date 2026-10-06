@@ -1,0 +1,40 @@
+<svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="gradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#b8860b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4a574;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="400" fill="url(#gradBg)"/>
+
+  <!-- Dark overlay for text readability -->
+  <rect width="1200" height="400" fill="rgba(26, 35, 50, 0.4)"/>
+
+  <!-- Main Title -->
+  <text x="600" y="80" font-family="Arial, sans-serif" font-size="56" font-weight="bold"
+        text-anchor="middle" fill="white">Coming Soon</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="160" font-family="Arial, sans-serif" font-size="32"
+        text-anchor="middle" fill="#d4a574">Premium Precision Jigs & Lures</text>
+
+  <!-- Description -->
+  <text x="600" y="220" font-family="Arial, sans-serif" font-size="20"
+        text-anchor="middle" fill="white">Quality Fishing Gear for the Serious Angler</text>
+
+  <!-- Decorative elements -->
+  <g stroke="#d4a574" stroke-width="2" fill="none">
+    <!-- Left fishing hook -->
+    <path d="M 150 250 Q 180 280 150 320 Q 120 320 120 300"/>
+    <circle cx="135" cy="325" r="3" fill="#d4a574"/>
+
+    <!-- Right fishing hook -->
+    <path d="M 1050 250 Q 1020 280 1050 320 Q 1080 320 1080 300"/>
+    <circle cx="1065" cy="325" r="3" fill="#d4a574"/>
+  </g>
+
+  <!-- Fishing line pattern -->
+  <line x1="100" y1="100" x2="1100" y2="100" stroke="#d4a574" stroke-width="1" stroke-dasharray="5,5" opacity="0.3"/>
+</svg>
