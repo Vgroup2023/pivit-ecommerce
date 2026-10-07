@@ -15,6 +15,7 @@ import healthRouter from './routes/health';
 import authRouter from './routes/auth';
 import productsRouter from './routes/products';
 import ordersRouter from './routes/orders';
+import refundsRouter from './routes/refunds';
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/refunds', refundsRouter);
 
 // Health check endpoint
 app.get('/', (req: Request, res: Response) => {
