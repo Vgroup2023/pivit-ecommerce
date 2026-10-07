@@ -33,8 +33,8 @@ router.post(
       const user = await createUser(email, password, firstName, lastName);
 
       // Set session
-      req.session.userId = user.id;
-      req.session.email = user.email;
+      (req.session as any).userId = user.id;
+      (req.session as any).email = user.email;
 
       res.json({
         message: 'Account created successfully',
@@ -80,14 +80,14 @@ router.post(
       }
 
       // Set session
-      req.session.userId = user.id;
-      req.session.email = user.email;
+      (req.session as any).userId = user.id;
+      (req.session as any).email = user.email;
 
       // If tenant ID provided, check admin role
       if (tenantId) {
         const role = await getAdminRole(user.id, tenantId);
-        req.session.tenantId = tenantId;
-        req.session.role = role || 'customer';
+        (req.session as any).tenantId = tenantId;
+        (req.session as any).role = role || 'customer';
       }
 
       res.json({
@@ -120,7 +120,7 @@ router.post('/logout', (req: Request, res: Response) => {
 
 router.get('/me', requireAuth, async (req: Request, res: Response) => {
   try {
-    const user = await getUserByEmail(req.session.email!);
+    const user = await getUserByEmail((req.session as any).email!);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
