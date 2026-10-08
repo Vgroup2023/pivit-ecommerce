@@ -415,15 +415,80 @@ function CartView({ cart, total, onClose, onUpdateQuantity, onCheckout }: any) {
 
 function CheckoutView({ cart, total, onClose }: any) {
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
+  const [sameBilling, setSameBilling] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [orderNumber, setOrderNumber] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const shippingCost = 10.00;
+  const finalTotal = total + shippingCost;
+
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowSuccess(true);
-    setTimeout(() => {
-      // In production, integrate with Stripe/payment processor
-      alert('Thank you for your order! Redirecting to payment...');
-    }, 2000);
+    setIsProcessing(true);
+    setError('');
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      // Create order
+      const orderResponse = await fetch(`${apiUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantId: 'pivit-fishing', // Shop subdomain tenant
+          customerId: null, // Guest checkout
+          items: cart.map((item: CartItem) => ({
+            product_id: item.id,
+            product_name: item.name,
+            quantity: item.quantity,
+            unit_price: item.price,
+          })),
+          subtotal: total,
+          tax: 0,
+          shipping: shippingCost,
+          total: finalTotal,
+          shippingAddress: {
+            name: fullName,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip,
+            email: email,
+            phone: phone,
+          },
+          billingAddress: sameBilling ? undefined : {
+            name: fullName,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip,
+          },
+        }),
+        credentials: 'include'
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error('Failed to create order');
+      }
+
+      const orderData = await orderResponse.json();
+      setOrderNumber(orderData.orderNumber);
+
+      // TODO: In production, redirect to Stripe payment here
+      // For now, show success message
+      setShowSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Payment processing failed');
+      setIsProcessing(false);
+    }
   };
 
   if (showSuccess) {
@@ -431,9 +496,13 @@ function CheckoutView({ cart, total, onClose }: any) {
       <div className="modal-overlay" onClick={onClose}>
         <div className="modal-content checkout-modal" onClick={e => e.stopPropagation()}>
           <div className="success-message">
-            <h2>Order Received!</h2>
+            <h2>✓ Order Confirmed!</h2>
             <p>Thank you for choosing PIVIT Fishing.</p>
+            <p><strong>Order #: {orderNumber}</strong></p>
             <p>A confirmation email has been sent to {email}</p>
+            <p style={{ fontSize: '0.9em', color: '#666', marginTop: '1rem' }}>
+              Payment processing will redirect to secure Stripe checkout.
+            </p>
             <button onClick={onClose} className="close-btn">Continue Shopping</button>
           </div>
         </div>
@@ -450,6 +519,8 @@ function CheckoutView({ cart, total, onClose }: any) {
 
         <h2>Checkout</h2>
 
+        {error && <div style={{ color: 'red', padding: '10px', marginBottom: '1rem', backgroundColor: '#ffe6e6', borderRadius: '4px' }}>{error}</div>}
+
         <form onSubmit={handleCheckout} className="checkout-form">
           <div className="form-section">
             <h3>Contact</h3>
@@ -460,45 +531,90 @@ function CheckoutView({ cart, total, onClose }: any) {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input type="tel" placeholder="Phone" required />
+            <input
+              type="tel"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
           </div>
 
           <div className="form-section">
             <h3>Shipping Address</h3>
-            <input type="text" placeholder="Full Name" required />
-            <input type="text" placeholder="Street Address" required />
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Street Address"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              required
+            />
             <div className="form-row">
-              <input type="text" placeholder="City" required />
-              <input type="text" placeholder="State" required />
-              <input type="text" placeholder="ZIP Code" required />
+              <input
+                type="text"
+                placeholder="City"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="State"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="ZIP Code"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                required
+              />
             </div>
           </div>
 
           <div className="form-section">
             <h3>Billing Address</h3>
             <label>
-              <input type="checkbox" defaultChecked /> Same as shipping
+              <input
+                type="checkbox"
+                checked={sameBilling}
+                onChange={(e) => setSameBilling(e.target.checked)}
+              />
+              Same as shipping
             </label>
           </div>
 
           <div className="order-summary">
             <h3>Order Summary</h3>
             <div className="summary-row">
-              <span>Items ({cart.length}):</span>
+              <span>Items ({cart.reduce((sum: number, item: CartItem) => sum + item.quantity, 0)}):</span>
               <span>${total.toFixed(2)}</span>
             </div>
             <div className="summary-row">
               <span>Shipping:</span>
-              <span>$10.00</span>
+              <span>${shippingCost.toFixed(2)}</span>
             </div>
             <div className="summary-row total">
               <span>Total:</span>
-              <span>${(total + 10).toFixed(2)}</span>
+              <span>${finalTotal.toFixed(2)}</span>
             </div>
           </div>
 
-          <button type="submit" className="checkout-btn">
-            Complete Purchase
+          <button
+            type="submit"
+            className="checkout-btn"
+            disabled={isProcessing}
+          >
+            {isProcessing ? 'Processing...' : 'Complete Purchase'}
           </button>
         </form>
       </div>
