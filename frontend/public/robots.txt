@@ -1,0 +1,22 @@
+# PIVIT Fishing Shop - SEO Configuration
+# Last Updated: 2026-10-08
+
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /admin
+
+# Specific crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemaps
+Sitemap: https://shop.pivitfishing.com/sitemap.xml
+Sitemap: https://www.pivitfishing.com/sitemap.xml
+
+# Crawl delay (in seconds)
+Crawl-delay: 1

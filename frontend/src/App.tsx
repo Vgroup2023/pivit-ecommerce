@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Shop from './pages/Shop';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminOrders from './pages/Admin/Orders';
 import AdminOrderDetails from './pages/Admin/OrderDetails';
@@ -15,6 +16,21 @@ import AdminProducts from './pages/Admin/Products';
 import CompliancePage from './pages/Compliance';
 
 function App() {
+  // Check if this is the shop subdomain
+  const isShopSubdomain = window.location.hostname === 'shop.pivitfishing.com';
+
+  // If shop subdomain, render shop without header/footer
+  if (isShopSubdomain) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<Shop />} />
+        </Routes>
+      </Router>
+    );
+  }
+
+  // Otherwise, render main app with header/footer
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
@@ -29,6 +45,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/compliance" element={<CompliancePage />} />
+            <Route path="/shop" element={<Shop />} />
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />
